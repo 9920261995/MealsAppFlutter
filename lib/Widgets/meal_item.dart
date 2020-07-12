@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meals_app/Screens/meal_details_screen.dart';
 
 import '../Models/Meal.dart';
 
@@ -16,10 +17,49 @@ class MealItem extends StatelessWidget {
       @required this.complexity,
       @required this.affordability});
 
+  void _navigateMealsDetail(BuildContext ctx) {
+    Navigator.of(ctx)
+        .pushNamed(MealDetailsScreen.routeName, arguments: {'title': title});
+  }
+
+  String get complexityText {
+    switch (complexity) {
+      case Complexity.Simple:
+        return 'Simple';
+        break;
+      case Complexity.Challenging:
+        return 'Challenging';
+        break;
+      case Complexity.Hard:
+        return 'Hard';
+        break;
+      default:
+        return 'Unknown';
+        break;
+    }
+  }
+
+  String get affordibilityText {
+    switch (affordability) {
+      case Affordability.Affordable:
+        return 'Affordable';
+        break;
+      case Affordability.Pricey:
+        return 'Pricey';
+        break;
+      case Affordability.Luxurious:
+        return 'Luxurious';
+        break;
+      default:
+        return 'Unknown';
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () => _navigateMealsDetail(context),
       child: Card(
         elevation: 4,
         margin: EdgeInsets.all(10),
@@ -39,8 +79,60 @@ class MealItem extends StatelessWidget {
                     fit: BoxFit.cover,
                   ),
                 ),
+                Positioned(
+                  bottom: 25,
+                  right: 5,
+                  // left: 0,
+                  // top: 0,
+                  child: Container(
+                    width: 300,
+                    padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                    color: Colors.black54,
+                    child: Text(
+                      title,
+                      style: TextStyle(fontSize: 23, color: Colors.white),
+                      softWrap: true,
+                      overflow: TextOverflow.fade,
+                    ),
+                  ),
+                )
               ],
             ),
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Icon(Icons.schedule),
+                      SizedBox(
+                        width: 6,
+                      ),
+                      Text('${duration} min')
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Icon(Icons.work),
+                      SizedBox(
+                        width: 6,
+                      ),
+                      Text('${complexityText}')
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Icon(Icons.monetization_on),
+                      SizedBox(
+                        width: 6,
+                      ),
+                      Text('${affordibilityText}')
+                    ],
+                  )
+                ],
+              ),
+            )
           ],
         ),
       ),
