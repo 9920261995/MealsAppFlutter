@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:meals_app/Screens/meal_details_screen.dart';
+import '../Screens/meal_details_screen.dart';
 
 import '../Models/Meal.dart';
 
 class MealItem extends StatelessWidget {
+  final String id;
   final String title;
   final String imageUrl;
   final int duration;
@@ -11,15 +12,16 @@ class MealItem extends StatelessWidget {
   final Affordability affordability;
 
   MealItem(
-      {@required this.title,
+      {@required this.id,
+      @required this.title,
       @required this.imageUrl,
       @required this.duration,
       @required this.complexity,
       @required this.affordability});
 
   void _navigateMealsDetail(BuildContext ctx) {
-    Navigator.of(ctx)
-        .pushNamed(MealDetailsScreen.routeName, arguments: {'title': title});
+    Navigator.of(ctx).pushNamed(MealDetailsScreen.routeName,
+        arguments: {'id': id, 'title': title});
   }
 
   String get complexityText {
