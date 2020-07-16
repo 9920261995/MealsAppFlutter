@@ -21,7 +21,7 @@ class MealItem extends StatelessWidget {
 
   void _navigateMealsDetail(BuildContext ctx) {
     Navigator.of(ctx).pushNamed(MealDetailsScreen.routeName,
-        arguments: {'id': id, 'title': title});
+        arguments: {'id': id, 'title': title}).then((value) => print(value));
   }
 
   String get complexityText {
