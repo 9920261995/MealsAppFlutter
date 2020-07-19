@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import './Models/Meal.dart';
+import './dummy_data.dart';
 import './Screens/filters_screen.dart';
 import './Screens/tabs_screen.dart';
 import './Screens/meal_details_screen.dart';
@@ -9,7 +11,44 @@ void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Map<String, bool> _filters = {
+    'gluten': false,
+    'lactose': false,
+    'vegan': false,
+    'vegetarian': false,
+  };
+
+  List<Meal> _availableMeals = DUMMY_MEALS;
+
+  void updateFilters(Map<String, bool> filterData) {
+    print(filterData);
+    setState(() {
+      _filters = filterData;
+
+      _availableMeals = DUMMY_MEALS.where((meal) {
+        if (filterData['gluten'] && meal.isGlutenFree) {
+          return false;
+        }
+        if (filterData['vegan'] && meal.isVegan) {
+          return false;
+        }
+        if (meal.isVegetarian && filterData['vegetarian']) {
+          return false;
+        }
+        if (meal.isLactoseFree && filterData['lactose']) {
+          return false;
+        }
+        return true;
+      }).toList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -27,21 +66,13 @@ class MyApp extends StatelessWidget {
                   fontFamily: "RobotoCondensed",
                   fontSize: 24,
                   fontWeight: FontWeight.bold))),
-      // home: CategoriesScreen(),
       initialRoute: '/',
       routes: {
         '/': (ctx) => TabsScreen(),
-        CategoriesMealsScreen.routeName: (_) => CategoriesMealsScreen(),
+        CategoriesMealsScreen.routeName: (_) =>
+            CategoriesMealsScreen(_availableMeals),
         MealDetailsScreen.routeName: (_) => MealDetailsScreen(),
-        FilterScreen.routeName: (_) => FilterScreen(),
-      },
-      onGenerateRoute: (settings) {
-        print(settings.name);
-        return MaterialPageRoute(builder: (ctx) => CategoriesScreen());
-      },
-      onUnknownRoute: (settings) {
-        print(settings.arguments);
-        return MaterialPageRoute(builder: (ctx) => CategoriesScreen());
+        FilterScreen.routeName: (_) => FilterScreen(updateFilters, _filters),
       },
     );
   }
