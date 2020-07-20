@@ -20,14 +20,11 @@ class _CategoriesMealsScreenState extends State<CategoriesMealsScreen> {
 
   @override
   void didChangeDependencies() {
-    print(widget.availableMeals[1].isGlutenFree);
     final routeArgs =
         ModalRoute.of(context).settings.arguments as Map<String, String>;
     categoryTitle = routeArgs['title'];
     final categoryId = routeArgs['id'];
-    // displayMeals = DUMMY_MEALS.where((meal) {
-    //   return meal.categories.contains(categoryId);
-    // }).toList();
+
     displayMeals = widget.availableMeals.where((meal) {
       return meal.categories.contains(categoryId);
     }).toList();
@@ -50,13 +47,13 @@ class _CategoriesMealsScreenState extends State<CategoriesMealsScreen> {
         child: ListView.builder(
           itemBuilder: (ctx, index) {
             return MealItem(
-                id: displayMeals[index].id,
-                title: displayMeals[index].title,
-                imageUrl: displayMeals[index].imageUrl,
-                duration: displayMeals[index].duration,
-                complexity: displayMeals[index].complexity,
-                affordability: displayMeals[index].affordability,
-                removeItem: removeMeal);
+              id: displayMeals[index].id,
+              title: displayMeals[index].title,
+              imageUrl: displayMeals[index].imageUrl,
+              duration: displayMeals[index].duration,
+              complexity: displayMeals[index].complexity,
+              affordability: displayMeals[index].affordability,
+            );
           },
           itemCount: displayMeals.length,
         ),

@@ -25,28 +25,49 @@ class _MyAppState extends State<MyApp> {
   };
 
   List<Meal> _availableMeals = DUMMY_MEALS;
+  List<Meal> _favouritedMeals = [];
 
   void updateFilters(Map<String, bool> filterData) {
-    print(filterData);
     setState(() {
       _filters = filterData;
 
       _availableMeals = DUMMY_MEALS.where((meal) {
-        if (filterData['gluten'] && meal.isGlutenFree) {
+        if (filterData['gluten'] && !meal.isGlutenFree) {
           return false;
         }
-        if (filterData['vegan'] && meal.isVegan) {
+        if (filterData['vegan'] && !meal.isVegan) {
           return false;
         }
-        if (meal.isVegetarian && filterData['vegetarian']) {
+        if (filterData['vegetarian'] && !meal.isVegetarian) {
           return false;
         }
-        if (meal.isLactoseFree && filterData['lactose']) {
+        if (filterData['lactose'] && !meal.isLactoseFree) {
           return false;
         }
         return true;
       }).toList();
     });
+  }
+
+  void _toggleFavourite(String mealId) {
+    final existingIndex =
+        _favouritedMeals.indexWhere((meal) => meal.id == mealId);
+    print(existingIndex);
+
+    if (existingIndex >= 0) {
+      setState(() {
+        _favouritedMeals.removeAt(existingIndex);
+      });
+    } else {
+      setState(() {
+        _favouritedMeals
+            .add(DUMMY_MEALS.firstWhere((meal) => meal.id == mealId));
+      });
+    }
+  }
+
+  bool isMealFavourite(String id) {
+    return _favouritedMeals.any((meal) => meal.id == id);
   }
 
   @override
@@ -68,10 +89,11 @@ class _MyAppState extends State<MyApp> {
                   fontWeight: FontWeight.bold))),
       initialRoute: '/',
       routes: {
-        '/': (ctx) => TabsScreen(),
+        '/': (ctx) => TabsScreen(_favouritedMeals),
         CategoriesMealsScreen.routeName: (_) =>
             CategoriesMealsScreen(_availableMeals),
-        MealDetailsScreen.routeName: (_) => MealDetailsScreen(),
+        MealDetailsScreen.routeName: (_) =>
+            MealDetailsScreen(_toggleFavourite, isMealFavourite),
         FilterScreen.routeName: (_) => FilterScreen(updateFilters, _filters),
       },
     );

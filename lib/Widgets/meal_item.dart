@@ -10,23 +10,25 @@ class MealItem extends StatelessWidget {
   final int duration;
   final Complexity complexity;
   final Affordability affordability;
-  final Function removeItem;
 
-  MealItem(
-      {@required this.id,
-      @required this.title,
-      @required this.imageUrl,
-      @required this.duration,
-      @required this.complexity,
-      @required this.affordability,
-      @required this.removeItem});
+  MealItem({
+    @required this.id,
+    @required this.title,
+    @required this.imageUrl,
+    @required this.duration,
+    @required this.complexity,
+    @required this.affordability,
+  });
 
   void _navigateMealsDetail(BuildContext ctx) {
     Navigator.of(ctx).pushNamed(MealDetailsScreen.routeName, arguments: {
       'id': id,
       'title': title
     }).then((result) => {
-          if (result != null) {removeItem(result)}
+          if (result != null)
+            {
+              // removeItem(result)
+            }
         });
   }
 
